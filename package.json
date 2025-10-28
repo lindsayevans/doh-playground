@@ -1,0 +1,70 @@
+{
+  "name": "do-h-playground",
+  "version": "0.0.0",
+  "description": "DoH Playground",
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "clean": "rm -rf dist && rm -rf .parcel-cache",
+    "test": "jest",
+    "lint": "eslint ./src/",
+    "lint:fix": "eslint --fix ./src/",
+    "prettier": "prettier --write .",
+    "g:component": "scffld reg:react-component --includeTests=true --outputDirectory=./src/components/"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "pretty-quick --staged",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{scss}": [
+      "pretty-quick --staged",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "@parcel/transformer-sass": "^2",
+    "@scffld/cli": "^1.6.1",
+    "@testing-library/dom": "^10.2.0",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.6.0",
+    "husky": "^9.0.11",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.2.7",
+    "parcel": "^2",
+    "postcss": "^8.4.38",
+    "postcss-preset-mantine": "^1.15.0",
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3",
+    "pretty-quick": "^4.0.0",
+    "process": "^0.11.10",
+    "ts-jest": "^29.1.5",
+    "typescript": "^5",
+    "typescript-eslint": "^7.14.1"
+  },
+  "dependencies": {
+    "@mantine/core": "^7.11.0",
+    "@mantine/hooks": "^7.11.0",
+    "clsx": "^2.1.1",
+    "react": "^18",
+    "react-bootstrap-icons": "^1.11.4",
+    "react-dom": "^18",
+    "react-router-dom": "^6.24.0"
+  }
+}

@@ -1,0 +1,7 @@
+$font-body: "Inter", sans-serif;
+$font-heading: "Roboto Slab", serif;
+
+:root {
+  --font-body: #{$font-body};
+  --font-heading: #{$font-heading};
+}

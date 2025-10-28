@@ -1,0 +1,32 @@
+.theme-toggle {
+  &__icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+[data-mantine-color-scheme="light"] {
+  .theme-toggle {
+    &__icon {
+      &--light {
+        display: none;
+      }
+      &--dark {
+        display: block;
+      }
+    }
+  }
+}
+
+[data-mantine-color-scheme="dark"] {
+  .theme-toggle {
+    &__icon {
+      &--light {
+        display: block;
+      }
+      &--dark {
+        display: none;
+      }
+    }
+  }
+}
