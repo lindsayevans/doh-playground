@@ -25,7 +25,7 @@ import { DataTable } from 'mantine-datatable';
 import { useSearchParams } from 'react-router-dom';
 import { IconAlertCircle, IconInfoCircle } from '@tabler/icons-react';
 
-const resolvers = [
+const RESOLVERS = [
   {
     name: 'Cloudflare',
     url: 'https://cloudflare-dns.com/dns-query',
@@ -36,18 +36,22 @@ const resolvers = [
   },
 ];
 
+const DEFAULT_RESOLVER = RESOLVERS[0].name;
+const DEFAULT_DOMAIN = '';
+const DEFAULT_TYPES = ['A', 'AAAA', 'CNAME'];
+
 export const DoH: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const searchDomain = searchParams.get('domain');
   const searchTypes = searchParams.getAll('types');
 
-  const [domain, setDomain] = useState(searchDomain || '');
+  const [domain, setDomain] = useState(searchDomain || DEFAULT_DOMAIN);
   const [resolver, setResolver] = useState(
-    searchParams.get('resolver') || resolvers[0].name
+    searchParams.get('resolver') || DEFAULT_RESOLVER
   );
   const [types, setTypes] = useState<string[]>(
-    searchTypes && searchTypes.length > 0 ? searchTypes : ['A', 'AAAA', 'CNAME']
+    searchTypes && searchTypes.length > 0 ? searchTypes : DEFAULT_TYPES
   );
 
   const [loading, setLoading] = useState(false);
@@ -78,7 +82,7 @@ export const DoH: React.FC = () => {
   };
 
   const getResolverUrl = (name: string) => {
-    return resolvers.find((x) => x.name === name)?.url || resolvers[0].url;
+    return RESOLVERS.find((x) => x.name === name)?.url || RESOLVERS[0].url;
   };
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -143,6 +147,16 @@ export const DoH: React.FC = () => {
     }
   }, [searchDomain]);
 
+  const onResetClick = () => {
+    setResolver(DEFAULT_RESOLVER);
+    setDomain(DEFAULT_DOMAIN);
+    setTypes(DEFAULT_TYPES);
+    setSearchParams();
+    setResults([]);
+    setInfo(undefined);
+    setError(undefined);
+  };
+
   return (
     <Container size="lg">
       <form onSubmit={(e) => onFormSubmit(e)}>
@@ -156,7 +170,7 @@ export const DoH: React.FC = () => {
           <NativeSelect
             label="Resolver"
             value={resolver}
-            data={resolvers.map((x) => x.name)}
+            data={RESOLVERS.map((x) => x.name)}
             onChange={(e) => setResolver(e.target.value)}
           />
           <TextInput
@@ -176,6 +190,9 @@ export const DoH: React.FC = () => {
           />
           <Button type="submit" variant="filled">
             Query
+          </Button>
+          <Button type="reset" variant="outline" onClick={() => onResetClick()}>
+            Reset
           </Button>
         </Flex>
       </form>
