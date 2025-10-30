@@ -103,8 +103,11 @@ export const DoH: React.FC = () => {
     setError(undefined);
 
     try {
-      const queries = types.map((x) =>
-        buildQuery(domain, x, getResolverUrl(resolver))
+      const queries = types.flatMap((type) =>
+        domain
+          .split(',')
+          .map((x) => x.trim())
+          .map((domain) => buildQuery(domain, type, getResolverUrl(resolver)))
       );
       const queryResults = await Promise.all(queries);
 
@@ -174,8 +177,8 @@ export const DoH: React.FC = () => {
             onChange={(e) => setResolver(e.target.value)}
           />
           <TextInput
-            label="Domain"
-            placeholder="e.g. example.com"
+            label="Domains"
+            placeholder="Comma separated"
             value={domain}
             onChange={(event) => setDomain(event.currentTarget.value)}
             autoFocus
