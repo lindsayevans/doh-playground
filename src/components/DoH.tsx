@@ -104,20 +104,22 @@ export const DoH: React.FC = () => {
       const queryResults = await Promise.all(queries);
 
       const results: DnsRecord[] = [];
-      queryResults.forEach((result) => {
+      queryResults.forEach((result, i) => {
         if (
           result.Status === 0 &&
           result.Answer !== undefined &&
           result.Answer.map
         ) {
           results.push(
-            ...result.Answer.map((answer: Record<string, string>) => ({
-              id: btoa(answer.type + answer.name + answer.data),
-              type: DnsRecordTypes[answer.type as unknown as number],
-              name: answer.name,
-              data: answer.data,
-              ttl: answer.TTL,
-            }))
+            ...result.Answer.map(
+              (answer: Record<string, string>, ii: number) => ({
+                id: btoa(answer.type + answer.name + answer.data + i + ii),
+                type: DnsRecordTypes[answer.type as unknown as number],
+                name: answer.name,
+                data: answer.data,
+                ttl: answer.TTL,
+              })
+            )
           );
         }
       });
