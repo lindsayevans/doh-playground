@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
 import {
   Alert,
@@ -42,7 +42,7 @@ export const DoH: React.FC = () => {
   const searchDomain = searchParams.get('domain');
   const searchTypes = searchParams.getAll('types');
 
-  const [domain, setDomain] = useState(searchDomain || 'example.com');
+  const [domain, setDomain] = useState(searchDomain || '');
   const [resolver, setResolver] = useState(
     searchParams.get('resolver') || resolvers[0].name
   );
@@ -81,7 +81,8 @@ export const DoH: React.FC = () => {
     return resolvers.find((x) => x.name === name)?.url || resolvers[0].url;
   };
 
-  const onQueryClick = () => {
+  const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setSearchParams({
       resolver,
       domain,
@@ -137,42 +138,47 @@ export const DoH: React.FC = () => {
   };
 
   useEffect(() => {
-    runAllQueries();
+    if (domain !== '') {
+      runAllQueries();
+    }
   }, [searchDomain]);
 
   return (
     <Container size="lg">
-      <Flex
-        direction={{ base: 'column', sm: 'row' }}
-        align={{ base: 'stretch', sm: 'flex-end' }}
-        gap="sm"
-        mb="md"
-        mt="xl"
-      >
-        <NativeSelect
-          label="Resolver"
-          value={resolver}
-          data={resolvers.map((x) => x.name)}
-          onChange={(e) => setResolver(e.target.value)}
-        />
-        <TextInput
-          label="Domain"
-          placeholder="e.g. example.com"
-          value={domain}
-          onChange={(event) => setDomain(event.currentTarget.value)}
-        />
-        <MultiSelect
-          label="Types"
-          data={allTypes}
-          value={types}
-          onChange={setTypes}
-          clearable
-          searchable
-        />
-        <Button variant="filled" onClick={() => onQueryClick()}>
-          Query
-        </Button>
-      </Flex>
+      <form onSubmit={(e) => onFormSubmit(e)}>
+        <Flex
+          direction={{ base: 'column', sm: 'row' }}
+          align={{ base: 'stretch', sm: 'flex-end' }}
+          gap="sm"
+          mb="lg"
+          mt="lg"
+        >
+          <NativeSelect
+            label="Resolver"
+            value={resolver}
+            data={resolvers.map((x) => x.name)}
+            onChange={(e) => setResolver(e.target.value)}
+          />
+          <TextInput
+            label="Domain"
+            placeholder="e.g. example.com"
+            value={domain}
+            onChange={(event) => setDomain(event.currentTarget.value)}
+            autoFocus
+          />
+          <MultiSelect
+            label="Types"
+            data={allTypes}
+            value={types}
+            onChange={setTypes}
+            clearable
+            searchable
+          />
+          <Button type="submit" variant="filled">
+            Query
+          </Button>
+        </Flex>
+      </form>
 
       {results && results.length > 0 && (
         <>
