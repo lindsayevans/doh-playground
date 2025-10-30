@@ -1,10 +1,12 @@
 import React, { FormEvent, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
+import { IconAlertCircle, IconInfoCircle } from '@tabler/icons-react';
+import { DataTable } from 'mantine-datatable';
 import {
   Alert,
   Button,
   Container,
-  createTheme,
   Flex,
   Loader,
   MultiSelect,
@@ -12,18 +14,7 @@ import {
   TextInput,
 } from '@mantine/core';
 
-import '@mantine/core/styles.css';
-import 'mantine-datatable/styles.css';
-
-const theme = createTheme({
-  fontFamily: 'Inter, sans-serif',
-  primaryColor: 'cyan',
-});
-
 import { DnsRecord, DnsRecordTypes } from '../DnsRecord';
-import { DataTable } from 'mantine-datatable';
-import { useSearchParams } from 'react-router-dom';
-import { IconAlertCircle, IconInfoCircle } from '@tabler/icons-react';
 
 const RESOLVERS = [
   {
@@ -85,17 +76,6 @@ export const DoH: React.FC = () => {
     return RESOLVERS.find((x) => x.name === name)?.url || RESOLVERS[0].url;
   };
 
-  const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearchParams({
-      resolver,
-      domain,
-      types,
-    });
-
-    runAllQueries();
-  };
-
   const runAllQueries = async () => {
     setLoading(true);
     setResults([]);
@@ -144,12 +124,6 @@ export const DoH: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (domain !== '') {
-      runAllQueries();
-    }
-  }, [searchDomain]);
-
   const onResetClick = () => {
     setResolver(DEFAULT_RESOLVER);
     setDomain(DEFAULT_DOMAIN);
@@ -159,6 +133,23 @@ export const DoH: React.FC = () => {
     setInfo(undefined);
     setError(undefined);
   };
+
+  const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchParams({
+      resolver,
+      domain,
+      types,
+    });
+
+    runAllQueries();
+  };
+
+  useEffect(() => {
+    if (domain !== '') {
+      runAllQueries();
+    }
+  }, [searchDomain]);
 
   return (
     <Container size="lg">
