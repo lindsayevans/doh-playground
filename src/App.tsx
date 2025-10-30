@@ -12,10 +12,17 @@ const theme = createTheme({
 });
 
 import { DoH } from './components/DoH';
+import { IconBrandGithub } from '@tabler/icons-react';
 
 export const App: React.FC = () => {
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
+      <header>
+        <h1>DNS over HTTPS</h1>
+        <a href="https://github.com/lindsayevans/doh-playground">
+          <IconBrandGithub size={32} color="#fff" />
+        </a>
+      </header>
       <Router>
         <Routes>
           <Route path="/" element={<DoH />} />
