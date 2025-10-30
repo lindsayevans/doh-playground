@@ -1,6 +1,6 @@
 # DoH Playground
 
-> Created with [scffld](https://www.npmjs.com/package/@scffld/cli) and the [React web app template](https://github.com/scffld-dev/website/blob/main/templates/react-parcel-app.md)
+Basic app to run [DNS over HTTPS](https://en.wikipedia.org/wiki/DNS_over_HTTPS) queries against [Cloudflare](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/) and [Google](https://developers.google.com/speed/public-dns/docs/doh/json) resolvers.
 
 ## Setup
 
