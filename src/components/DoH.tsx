@@ -13,6 +13,7 @@ import {
   NativeSelect,
   TextInput,
 } from '@mantine/core';
+import { AlignmentEnum, AsciiTable3 } from 'ascii-table3';
 
 import { DnsRecord, DnsRecordTypes } from '../DnsRecord';
 
@@ -103,7 +104,7 @@ export const DoH: React.FC = () => {
               (answer: Record<string, string>, ii: number) => ({
                 id: btoa(answer.type + answer.name + answer.data + i + ii),
                 type: DnsRecordTypes[answer.type as unknown as number],
-                name: answer.name,
+                name: normaliseName(answer.name),
                 data: answer.data,
                 ttl: answer.TTL,
               })
@@ -143,6 +144,33 @@ export const DoH: React.FC = () => {
     });
 
     runAllQueries();
+  };
+
+  const normaliseName = (name: string) =>
+    name.endsWith('.') ? name : name + '.';
+
+  const zoneFormat = (results: DnsRecord[]) => {
+    const table = new AsciiTable3()
+      .setStyle('none')
+      .setAligns(new Array(5).fill(AlignmentEnum.LEFT))
+      .setHeadingAlign(AlignmentEnum.LEFT)
+      .setHeading(';; NAME', 'TTL', 'CLASS', 'TYPE', 'DATA')
+      .addRowMatrix(
+        results.map((record) => [
+          record.name,
+          record.ttl,
+          'IN',
+          record.type,
+          record.data,
+        ])
+      );
+
+    return table.toString();
+  };
+
+  const copyZoneRecords = () => {
+    const zoneRecords = zoneFormat(results);
+    navigator.clipboard.writeText(zoneRecords);
   };
 
   useEffect(() => {
@@ -202,7 +230,16 @@ export const DoH: React.FC = () => {
             ]}
             records={results}
           ></DataTable>
+          {/* <pre>{zoneFormat(results)}</pre> */}
           {/* <pre>{JSON.stringify(results, null, 2)}</pre> */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => copyZoneRecords()}
+            mt="lg"
+          >
+            Copy zone records
+          </Button>
         </>
       )}
 
